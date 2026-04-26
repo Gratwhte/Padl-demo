@@ -2,59 +2,80 @@ window.SEED_DATA = {
   pois: [
     {
       id: 'poi-1',
-      name: 'Duna-parti Büfé',
+      name: 'Római-part Riverside Food Area',
       category: 'buffet',
-      position: [47.4979, 19.0452],
-      description: 'Quick food and drinks close to launch area.'
+      position: [47.5755, 19.0665],
+      description: 'Popular riverside snack and refreshment area by the Danube.'
     },
     {
       id: 'poi-2',
-      name: 'Római-part Restaurant',
-      category: 'restaurant',
-      position: [47.5718, 19.0647],
-      description: 'Popular riverside restaurant.'
+      name: 'Szentendre Danube Launch',
+      category: 'launch',
+      position: [47.6735, 19.0735],
+      description: 'Common launch point for paddling on the Szentendre branch.'
     },
     {
       id: 'poi-3',
-      name: 'Public Water Tap',
-      category: 'water_source',
-      position: [47.706, 19.126],
-      description: 'Fresh water refill point.'
+      name: 'Danube Riverside Parking',
+      category: 'parking',
+      position: [47.6622, 19.0794],
+      description: 'Convenient parking close to access point.'
     },
     {
       id: 'poi-4',
-      name: 'Tisza Riverside Camping',
-      category: 'camping',
-      position: [47.902, 20.377],
-      description: 'Basic camping near paddle section.'
+      name: 'Public Water Refill - North Danube Area',
+      category: 'water_source',
+      position: [47.7055, 19.0865],
+      description: 'Water refill near the branch and riverside recreation zone.'
     },
     {
       id: 'poi-5',
-      name: 'Kayak Launch - Szentendre Branch',
-      category: 'launch',
-      position: [47.673, 19.075],
-      description: 'Easy launch/slip access.'
+      name: 'Velence Lake Shore Buffet',
+      category: 'buffet',
+      position: [47.2325, 18.655],
+      description: 'Light food and drinks near the lake shore.'
     },
     {
       id: 'poi-6',
-      name: 'Parking by the River',
-      category: 'parking',
-      position: [47.661, 19.08],
-      description: 'Good place to leave a car before paddling.'
+      name: 'Velence Paddle Access',
+      category: 'launch',
+      position: [47.225, 18.690],
+      description: 'Lake launch/access point for kayaks and canoes.'
     },
     {
       id: 'poi-7',
-      name: 'Danube Paddle Rental',
-      category: 'rental',
-      position: [47.548, 19.049],
-      description: 'Kayak/canoe rental and basic service.'
+      name: 'Tisza Riverside Camping',
+      category: 'camping',
+      position: [47.903, 20.414],
+      description: 'Simple campsite near a demo Tisza section.'
     },
     {
       id: 'poi-8',
-      name: 'Váh Riverside Buffet',
+      name: 'Tisza Water Access',
+      category: 'launch',
+      position: [47.929, 20.365],
+      description: 'Launch area for river paddling.'
+    },
+    {
+      id: 'poi-9',
+      name: 'Váh Riverside Snack Stop',
       category: 'buffet',
-      position: [48.107, 17.996],
-      description: 'Snack stop near Slovak section.'
+      position: [48.106, 17.999],
+      description: 'Snack stop near the bordering Váh demo section.'
+    },
+    {
+      id: 'poi-10',
+      name: 'Danube Paddle Rental',
+      category: 'rental',
+      position: [47.548, 19.047],
+      description: 'Boat rental/service close to the river.'
+    },
+    {
+      id: 'poi-11',
+      name: 'Riverside Restaurant - Budapest Section',
+      category: 'restaurant',
+      position: [47.556, 19.054],
+      description: 'Sit-down food option near the Danube.'
     }
   ],
 
@@ -64,16 +85,18 @@ window.SEED_DATA = {
       name: 'Danube - Budapest Section',
       type: 'river',
       centerline: [
-        [47.620, 19.040],
-        [47.570, 19.050],
-        [47.520, 19.045],
-        [47.490, 19.040],
-        [47.450, 19.030]
+        [47.620, 19.036],
+        [47.596, 19.040],
+        [47.574, 19.047],
+        [47.548, 19.050],
+        [47.522, 19.045],
+        [47.494, 19.036],
+        [47.455, 19.030]
       ],
       properties: {
         flow: 'moderate',
         current: 'steady',
-        notes: 'Urban river section with heavy traffic; watch motorboats.'
+        notes: 'Urban Danube section with boat traffic and embankments.'
       }
     },
     {
@@ -81,15 +104,17 @@ window.SEED_DATA = {
       name: 'Szentendre Branch',
       type: 'river_branch',
       centerline: [
-        [47.750, 19.090],
-        [47.710, 19.080],
-        [47.680, 19.074],
-        [47.640, 19.070]
+        [47.748, 19.075],
+        [47.726, 19.074],
+        [47.703, 19.073],
+        [47.679, 19.072],
+        [47.655, 19.070],
+        [47.640, 19.069]
       ],
       properties: {
         flow: 'light',
         current: 'gentle',
-        notes: 'Popular paddle section, calmer than main Danube.'
+        notes: 'Calmer branch suited for recreational paddling.'
       }
     },
     {
@@ -97,15 +122,16 @@ window.SEED_DATA = {
       name: 'Lake Velence Demo Section',
       type: 'lake',
       centerline: [
-        [47.240, 18.620],
-        [47.230, 18.660],
-        [47.220, 18.720],
-        [47.210, 18.770]
+        [47.236, 18.620],
+        [47.232, 18.655],
+        [47.225, 18.690],
+        [47.221, 18.725],
+        [47.218, 18.760]
       ],
       properties: {
         flow: 'still',
         current: 'minimal',
-        notes: 'Lake paddling with wind exposure.'
+        notes: 'Lake environment with wind exposure.'
       }
     },
     {
@@ -113,15 +139,17 @@ window.SEED_DATA = {
       name: 'Tisza Demo Section',
       type: 'river',
       centerline: [
-        [47.980, 20.300],
-        [47.930, 20.360],
-        [47.890, 20.420],
-        [47.850, 20.500]
+        [47.976, 20.295],
+        [47.956, 20.330],
+        [47.931, 20.365],
+        [47.905, 20.405],
+        [47.880, 20.448],
+        [47.852, 20.500]
       ],
       properties: {
         flow: 'moderate',
         current: 'variable',
-        notes: 'Wide river section with changing banks.'
+        notes: 'Wide river section with changing banks and gentle bends.'
       }
     },
     {
@@ -129,15 +157,17 @@ window.SEED_DATA = {
       name: 'Váh Bordering Demo Section',
       type: 'river',
       centerline: [
-        [48.140, 17.980],
-        [48.120, 17.990],
-        [48.100, 18.000],
-        [48.070, 18.020]
+        [48.140, 17.981],
+        [48.127, 17.989],
+        [48.112, 17.997],
+        [48.096, 18.004],
+        [48.079, 18.015],
+        [48.061, 18.022]
       ],
       properties: {
         flow: 'moderate',
         current: 'steady',
-        notes: 'Border-region demo water corridor.'
+        notes: 'Border-region demo corridor for cross-border exploration context.'
       }
     }
   ],
@@ -146,76 +176,109 @@ window.SEED_DATA = {
     {
       id: 'ann-1',
       type: 'obstacle',
-      title: 'Low bridge clearance',
-      position: [47.676, 19.073],
-      note: 'Watch water level before passing.'
+      title: 'Low branch / overhanging obstacle',
+      position: [47.677, 19.072],
+      note: 'Take care when water level is high.'
     },
     {
       id: 'ann-2',
       type: 'crossing',
-      title: 'Possible crossing channel',
-      position: [47.544, 19.046],
-      note: 'Cross quickly due to boat traffic.'
+      title: 'Crossing corridor',
+      position: [47.545, 19.046],
+      note: 'Cross quickly due to motor traffic.'
     },
     {
       id: 'ann-3',
       type: 'hazard',
-      title: 'Motorboat traffic zone',
-      position: [47.500, 19.043],
-      note: 'Busy especially on weekends.'
+      title: 'Heavy boat wake zone',
+      position: [47.502, 19.041],
+      note: 'Expect larger wakes on busy days.'
     },
     {
       id: 'ann-4',
       type: 'portage',
-      title: 'Short portage section',
-      position: [47.925, 20.395],
-      note: 'Rocky bank, use caution.'
+      title: 'Short portage / rough bank',
+      position: [47.907, 20.409],
+      note: 'Landing can be muddy.'
     },
     {
       id: 'ann-5',
       type: 'lock_weir',
-      title: 'Weir warning',
+      title: 'Weir warning area',
       position: [48.098, 18.005],
       note: 'Do not approach directly.'
     },
     {
       id: 'ann-6',
       type: 'current_note',
-      title: 'Faster current in outer bend',
-      position: [47.574, 19.049],
-      note: 'Can speed up downstream travel.'
+      title: 'Outer bend stronger current',
+      position: [47.574, 19.048],
+      note: 'Current increases slightly here.'
     },
     {
       id: 'ann-7',
       type: 'flow_note',
-      title: 'Low summer water levels',
-      position: [47.220, 18.700],
-      note: 'Some reed areas become shallow.'
+      title: 'Seasonal shallow reeds',
+      position: [47.223, 18.740],
+      note: 'Lake edge becomes shallower in summer.'
     }
   ],
 
   routes: [
     {
       id: 'route-1',
-      name: 'Budapest Easy Paddle',
+      name: 'Danube Budapest Urban Paddle',
       points: [
-        [47.571, 19.062],
-        [47.555, 19.056],
-        [47.536, 19.049],
-        [47.515, 19.045]
+        [47.596, 19.040],
+        [47.575, 19.047],
+        [47.548, 19.050],
+        [47.524, 19.045]
       ],
       estimatedSpeedKmh: 6
     },
     {
       id: 'route-2',
-      name: 'Szentendre Relaxed Branch',
+      name: 'Szentendre Branch Relaxed Paddle',
       points: [
-        [47.715, 19.082],
-        [47.695, 19.079],
-        [47.675, 19.074],
-        [47.650, 19.071]
+        [47.726, 19.074],
+        [47.702, 19.073],
+        [47.678, 19.072],
+        [47.655, 19.070]
+      ],
+      estimatedSpeedKmh: 5
+    },
+    {
+      id: 'route-3',
+      name: 'Velence Lake Crossing Demo',
+      points: [
+        [47.234, 18.630],
+        [47.229, 18.665],
+        [47.224, 18.705],
+        [47.220, 18.748]
+      ],
+      estimatedSpeedKmh: 5
+    },
+    {
+      id: 'route-4',
+      name: 'Tisza Gentle Section',
+      points: [
+        [47.956, 20.330],
+        [47.931, 20.365],
+        [47.905, 20.405],
+        [47.882, 20.445]
+      ],
+      estimatedSpeedKmh: 5
+    },
+    {
+      id: 'route-5',
+      name: 'Váh Border Demo Run',
+      points: [
+        [48.127, 17.989],
+        [48.112, 17.997],
+        [48.096, 18.004],
+        [48.079, 18.015]
       ],
       estimatedSpeedKmh: 5
     }
   ]
-}
+};
