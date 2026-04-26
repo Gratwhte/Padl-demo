@@ -95,13 +95,61 @@
     return Math.hypot(px - cx, py - cy);
   }
 
-  function routeWaterWarning(routePoints, waters) {
+  function pointInRing(lat, lng, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const xi = ring[i][1], yi = ring[i][0];
+      const xj = ring[j][1], yj = ring[j][0];
+
+      const intersect =
+        ((yi > lat) !== (yj > lat)) &&
+        (lng < (xj - xi) * (lat - yi) / ((yj - yi) || 1e-12) + xi);
+
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  function pointInPolygonLatLng(point, polygonCoords) {
+    const lat = point[0];
+    const lng = point[1];
+    if (!polygonCoords || !polygonCoords.length) return false;
+
+    const outerRingLngLat = polygonCoords[0];
+    const outerRingLatLng = outerRingLngLat.map(c => [c[1], c[0]]);
+    return pointInRing(lat, lng, outerRingLatLng);
+  }
+
+  function isPointInsideAnyWaterPolygon(point, geojson) {
+    if (!geojson || !geojson.features) return false;
+
+    for (const feature of geojson.features) {
+      if (!feature.geometry) continue;
+
+      if (feature.geometry.type === 'Polygon') {
+        if (pointInPolygonLatLng(point, feature.geometry.coordinates)) return true;
+      }
+
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (const polygon of feature.geometry.coordinates) {
+          if (pointInPolygonLatLng(point, polygon)) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function routeWaterWarning(routePoints, waters, polygonsGeojson) {
     if (!routePoints || routePoints.length < 2) return null;
 
-    const threshold = 0.03;
-
     for (const point of routePoints) {
+      if (isPointInsideAnyWaterPolygon(point, polygonsGeojson)) {
+        continue;
+      }
+
       let nearAnyWater = false;
+      const threshold = 0.03;
 
       for (const water of waters) {
         for (let i = 1; i < water.centerline.length; i++) {
@@ -115,7 +163,7 @@
       }
 
       if (!nearAnyWater) {
-        return 'Warning: parts of this route may leave mapped water corridors.';
+        return 'Warning: parts of this route may leave mapped water polygons/corridors.';
       }
     }
 
@@ -148,6 +196,7 @@
   }
 
   const seed = window.SEED_DATA;
+  const waterPolygonsGeojson = window.WATER_POLYGONS;
 
   const state = {
     pois: seed.pois.slice(),
@@ -168,7 +217,8 @@
       annotations: true,
       routes: true,
       waters: true,
-      tracking: true
+      tracking: true,
+      waterPolygons: true
     }
   };
 
@@ -181,6 +231,7 @@
   const layers = {
     pois: L.layerGroup().addTo(map),
     waters: L.layerGroup().addTo(map),
+    waterPolygons: L.layerGroup().addTo(map),
     annotations: L.layerGroup().addTo(map),
     routes: L.layerGroup().addTo(map),
     draft: L.layerGroup().addTo(map),
@@ -211,7 +262,8 @@
     showAnnotations: document.getElementById('showAnnotations'),
     showRoutes: document.getElementById('showRoutes'),
     showWaters: document.getElementById('showWaters'),
-    showTracking: document.getElementById('showTracking')
+    showTracking: document.getElementById('showTracking'),
+    showWaterPolygons: document.getElementById('showWaterPolygons')
   };
 
   function saveCustomData() {
@@ -240,13 +292,14 @@
   function updateDraftStats() {
     const dist = polylineDistanceKm(state.draftRoute);
     const eta = estimateDuration(dist, 5);
+
     els.draftStats.innerHTML = `
       <div>Points: ${state.draftRoute.length}</div>
       <div>Distance: ${dist.toFixed(2)} km</div>
       <div>ETA @ 5 km/h: ${formatDurationHours(eta)}</div>
     `;
 
-    const warning = routeWaterWarning(state.draftRoute, state.waters);
+    const warning = routeWaterWarning(state.draftRoute, state.waters, waterPolygonsGeojson);
     if (warning) {
       els.draftWarning.style.display = 'block';
       els.draftWarning.textContent = warning;
@@ -254,14 +307,6 @@
       els.draftWarning.style.display = 'none';
       els.draftWarning.textContent = '';
     }
-  }
-
-  function applyLayerFilters() {
-    toggleLayer(layers.pois, state.filters.pois);
-    toggleLayer(layers.annotations, state.filters.annotations);
-    toggleLayer(layers.routes, state.filters.routes);
-    toggleLayer(layers.waters, state.filters.waters);
-    toggleLayer(layers.tracking, state.filters.tracking);
   }
 
   function toggleLayer(layer, show) {
@@ -272,14 +317,52 @@
     }
   }
 
+  function applyLayerFilters() {
+    toggleLayer(layers.pois, state.filters.pois);
+    toggleLayer(layers.annotations, state.filters.annotations);
+    toggleLayer(layers.routes, state.filters.routes);
+    toggleLayer(layers.waters, state.filters.waters);
+    toggleLayer(layers.tracking, state.filters.tracking);
+    toggleLayer(layers.waterPolygons, state.filters.waterPolygons);
+  }
+
+  function renderWaterPolygons() {
+    layers.waterPolygons.clearLayers();
+
+    L.geoJSON(waterPolygonsGeojson, {
+      style: function (feature) {
+        const type = feature.properties && feature.properties.type;
+        let fill = '#7dd3fc';
+        if (type === 'lake') fill = '#60a5fa';
+        if (type === 'river_branch') fill = '#93c5fd';
+
+        return {
+          color: '#38bdf8',
+          weight: 2,
+          opacity: 0.9,
+          fillColor: fill,
+          fillOpacity: 0.35
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        const p = feature.properties || {};
+        layer.bindPopup(`
+          <strong>${p.name || 'Water body'}</strong><br>
+          Type: ${p.type || 'water'}
+        `);
+      }
+    }).addTo(layers.waterPolygons);
+  }
+
   function renderWaters() {
     layers.waters.clearLayers();
 
     state.waters.forEach(water => {
       L.polyline(water.centerline, {
-        color: '#38bdf8',
-        weight: 6,
-        opacity: 0.65
+        color: '#0ea5e9',
+        weight: 4,
+        opacity: 0.85,
+        dashArray: '7 5'
       })
         .bindPopup(`
           <strong>${water.name}</strong><br>
@@ -319,7 +402,7 @@
         radius: 7,
         color: annotationColors[ann.type] || '#334155',
         fillColor: annotationColors[ann.type] || '#334155',
-        fillOpacity: 0.9
+        fillOpacity: 0.95
       })
         .bindPopup(`
           <strong>${ann.title}</strong><br>
@@ -505,7 +588,7 @@
       return;
     }
 
-    const warning = routeWaterWarning(state.draftRoute, state.waters);
+    const warning = routeWaterWarning(state.draftRoute, state.waters, waterPolygonsGeojson);
     if (warning) {
       const proceed = confirm(warning + '\n\nSave anyway?');
       if (!proceed) return;
@@ -527,6 +610,7 @@
     state.draftRoute = [];
     state.drawMode = false;
     els.toggleDrawBtn.classList.remove('active');
+
     saveCustomData();
     setModeBadge();
     renderDraftRoute();
@@ -668,6 +752,7 @@
   }
 
   function renderAll() {
+    renderWaterPolygons();
     renderWaters();
     renderPois();
     renderAnnotations();
@@ -790,6 +875,11 @@
 
   els.showTracking.addEventListener('change', function () {
     state.filters.tracking = this.checked;
+    applyLayerFilters();
+  });
+
+  els.showWaterPolygons.addEventListener('change', function () {
+    state.filters.waterPolygons = this.checked;
     applyLayerFilters();
   });
 
