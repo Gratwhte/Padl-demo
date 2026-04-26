@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WaterSport Demo</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <section class="panel">
+        <h1>WaterSport Demo</h1>
+        <p class="muted">
+          Water-sports route planner and tracker for Hungary and nearby waters.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>Modes</h2>
+        <div class="stack">
+          <button id="toggleDrawBtn">Draw Route</button>
+          <button id="undoPointBtn">Undo Last Point</button>
+          <button id="clearDraftBtn">Clear Draft</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Add Annotation</h2>
+        <div class="stack">
+          <select id="annotationType">
+            <option value="obstacle">Obstacle</option>
+            <option value="crossing">Crossing</option>
+            <option value="hazard">Hazard</option>
+            <option value="portage">Portage</option>
+            <option value="lock_weir">Lock / Weir</option>
+            <option value="current_note">Current Note</option>
+            <option value="flow_note">Flow Note</option>
+          </select>
+          <button id="toggleAnnotationBtn">Add Annotation</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tracking</h2>
+        <div class="stack">
+          <button id="startGpsBtn">Start GPS</button>
+          <button id="stopGpsBtn">Stop GPS</button>
+          <button id="startSimBtn">Simulate Track</button>
+          <button id="stopSimBtn">Stop Simulation</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Draft Route</h2>
+        <div id="draftStats" class="stats"></div>
+        <div id="draftWarning" class="warning"></div>
+        <div class="stack">
+          <button id="saveRouteBtn">Save Route</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Filters</h2>
+        <div class="checklist">
+          <label><input type="checkbox" id="showPois" checked /> POIs</label>
+          <label><input type="checkbox" id="showAnnotations" checked /> Annotations</label>
+          <label><input type="checkbox" id="showRoutes" checked /> Routes</label>
+          <label><input type="checkbox" id="showWaters" checked /> Water Corridors</label>
+          <label><input type="checkbox" id="showTracking" checked /> Tracking</label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Saved Routes</h2>
+        <div id="routesList" class="list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Annotations</h2>
+        <div id="annotationsList" class="list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Activities</h2>
+        <div id="activitiesList" class="list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Import / Export</h2>
+        <div class="stack">
+          <button id="exportBtn">Export JSON</button>
+          <label class="file-label">
+            Import JSON
+            <input type="file" id="importFile" accept="application/json" />
+          </label>
+        </div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="badge" id="modeBadge">Mode: View</div>
+        <div class="badge">Focus: Hungary + nearby waters</div>
+        <div class="badge" id="trackingBadge">Tracking: Off</div>
+      </div>
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
